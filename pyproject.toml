@@ -13,3 +13,6 @@ sdnotify = { version = "^0.3.2", platform = "linux" }
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+wireguard_dynamic_remote = "wireguard_dynamic_remote.binary:main"

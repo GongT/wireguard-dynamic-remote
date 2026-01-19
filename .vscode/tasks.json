@@ -15,7 +15,7 @@
 				"run",
 				"python",
 				"-m",
-				"wireguard_dynamic_remote.service",
+				"wireguard_dynamic_remote.binary",
 				"start"
 			]
 		},
@@ -31,7 +31,7 @@
 				"run",
 				"python",
 				"-m",
-				"wireguard_dynamic_remote.service",
+				"wireguard_dynamic_remote.binary",
 				"install"
 			]
 		}

@@ -8,7 +8,7 @@
 			"name": "Python 调试程序: 模块",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "wireguard_dynamic_remote.service",
+			"module": "wireguard_dynamic_remote.binary",
 			"args": ["start", "--resolver", "127.0.0.1"],
 		}
 	]
