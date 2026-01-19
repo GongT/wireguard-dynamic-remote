@@ -1,0 +1,39 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "启动服务",
+			"icon": {
+				"id": "play",
+				"color": "terminal.ansiCyan"
+			},
+			"type": "process",
+			"command": "poetry",
+			"args": [
+				"run",
+				"python",
+				"-m",
+				"wireguard_dynamic_remote.service",
+				"start"
+			]
+		},
+		{
+			"label": "安装服务",
+			"icon": {
+				"id": "download",
+				"color": "terminal.ansiGreen"
+			},
+			"type": "process",
+			"command": "poetry",
+			"args": [
+				"run",
+				"python",
+				"-m",
+				"wireguard_dynamic_remote.service",
+				"install"
+			]
+		}
+	]
+}
