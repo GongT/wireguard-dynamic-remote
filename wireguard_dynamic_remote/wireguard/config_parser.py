@@ -70,6 +70,7 @@ def parse_config_content(content: str):
         cache_lines = []
 
     for line in content.splitlines():
+        line = line.strip()
         if line.startswith("[Interface]"):
             commit()
             if len(interface) > 0:
@@ -81,8 +82,8 @@ def parse_config_content(content: str):
             stage = 2
             continue
 
-        line = line.strip()
-        cache_lines.append(line)
+        if line:
+            cache_lines.append(line)
 
     commit()
     
