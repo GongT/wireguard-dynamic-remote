@@ -1,8 +1,7 @@
 import argparse
 import sys
 
-from wireguard_dynamic_remote.common import logger
-
+from .common import logger
 from .common.context import RunContext
 
 

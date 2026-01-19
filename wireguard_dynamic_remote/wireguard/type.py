@@ -1,7 +1,5 @@
 import ipaddress
 
-from wireguard_dynamic_remote.common import logger
-
 
 def make_name_map(object):
     known_keys = {}

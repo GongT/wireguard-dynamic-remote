@@ -2,8 +2,7 @@ import ipaddress
 import shutil
 import sys
 
-from wireguard_dynamic_remote.common import logger
-
+from ..common import logger
 from ..common.spawn import execute_capture
 
 
@@ -71,7 +70,7 @@ class Resolver:
 def resolve(host: str, resolver: str | None = None):
     resolver_instance = Resolver()
     addresses = resolver_instance.resolver(host, resolver)
-    
+
     if len(addresses) == 0:
         logger.error(
             f"{resolver_instance.kind} did not return any addresses for host '{host}':\n{p}"

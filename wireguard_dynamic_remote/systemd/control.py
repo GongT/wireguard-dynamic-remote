@@ -33,7 +33,7 @@ Requires={SYSTEMD_SERVICE_NAME}.timer
 [Service]
 Type=oneshot
 User=root
-ExecStart={sys.executable} -m wireguard_dynamic_remote.service start {service_args}
+ExecStart={sys.executable} -m wireguard_dynamic_remote.binary start {service_args}
 Restart=no
 RemainAfterExit=no
 NotifyAccess=all
