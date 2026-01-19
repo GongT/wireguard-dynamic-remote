@@ -17,7 +17,7 @@ def main():
     parser.add_argument(
         "--interval",
         type=str,
-        default="60s",
+        default="60",
         help="Interval (in seconds) to check for IP changes",
     )
     parser.add_argument(
@@ -38,10 +38,14 @@ def main():
     interval = 0
     if input_interval.isdigit():
         interval = int(input_interval)
-    else:
+    elif sys.platform == "linux":
         from .systemd.tools import parse_timespan
 
         interval = parse_timespan(input_interval)
+    else:
+        logger.fatal(
+            f"Non-numeric interval '{input_interval}' is only supported on Linux platform."
+        )
 
     config = RunContext(args.interface, interval, args.resolver)
 

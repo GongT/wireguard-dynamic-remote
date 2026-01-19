@@ -41,14 +41,18 @@ def execute_capture(commandline: list[str], error: ErrorBehavior = "fatal") -> s
 
 
 def _execute(commandline: list[str], capture=False, error: ErrorBehavior = "fatal"):
-    p = subprocess.run(
-        commandline,
-        check=error == "raise",
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE if capture else subprocess.STDOUT,
-        stdin=subprocess.DEVNULL,
-    )
+    try:
+        p = subprocess.run(
+            commandline,
+            check=error == "raise",
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE if capture else subprocess.STDOUT,
+            stdin=subprocess.DEVNULL,
+        )
+    except Exception as e:
+        logger.error(f"Failed to execute command: {' '.join(commandline)}")
+        raise e
 
     if error == "fatal":
         logger.check(p)

@@ -26,13 +26,7 @@ def get_runtime_interface(interface: str):
 
 
 if sys.platform == "win32":
-    wg_exe = shutil.which("wg.exe")
-    if not wg_exe:
-        wg_exe = os.path.join(os.environ["ProgramFiles"], "WireGuard", "wg.exe")
-        if not os.path.exists(wg_exe):
-            raise RuntimeError("wg.exe not found in PATH")
-
-    CONFIG_FILES_DIR = Path(wg_exe).parent.joinpath("Data", "Configurations")
+    CONFIG_FILES_DIR = Path(os.environ["ProgramData"]).joinpath("WireGuard")
 else:
     CONFIG_FILES_DIR = Path("/etc/wireguard")
 
@@ -50,6 +44,7 @@ def get_static_config_file(interface: str):
 
 
 def list_config_files() -> list[str]:
+    logger.output(f"Listing config files in {CONFIG_FILES_DIR}")
     return [file.stem for file in CONFIG_FILES_DIR.glob("*.conf")]
 
 

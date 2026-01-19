@@ -50,7 +50,7 @@ def check_interface(interface: str, config: RunContext):
     update_by_set = True
     if cfg.OnChange == "restart":
         update_by_set = False
-    elif cfg.OnChange != "update":
+    elif cfg.OnChange != "update" and cfg.OnChange != "":
         logger.output(f"OnChange '{cfg.OnChange}' is invalid")
     logger.output(
         f"Updating endpoints by {'command set' if update_by_set else 'restart'}."
