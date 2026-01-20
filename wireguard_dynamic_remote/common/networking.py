@@ -13,7 +13,12 @@ def ping_each_ip(addresses: list[str]) -> str | None:
     ps: dict[str, subprocess.Popen] = {}
     for address in addresses:
         # run pings in parallel, race them
-        process = subprocess.Popen(ping_cmd + [address], stdout=subprocess.PIPE)
+        process = subprocess.Popen(
+            ping_cmd + [address],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
+        )
         ps[address] = process
 
     found = wait_for_processes(ps)
