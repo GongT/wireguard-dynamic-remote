@@ -16,22 +16,33 @@ def ping_each_ip(addresses: list[str]) -> str | None:
         process = subprocess.Popen(ping_cmd + [address], stdout=subprocess.PIPE)
         ps[address] = process
 
-    found: str | None = None
+    found = wait_for_processes(ps)
+    kill_all(ps)
+
+    return found
+
+
+def wait_for_processes(ps: dict[str, subprocess.Popen]):
     # 检查已完成的进程
-    while ps:
+    while True:
         for address, process in ps.items():
             return_code = process.poll()
             if return_code is None:  # 进程还在运行时，poll() 返回 None
                 continue
 
-            # 从ps删除
-            ps.pop(address)
-
             # 如果成功 ping 通，则返回地址
             if return_code == 0:
-                found = address
-                break
+                return address
 
+            # 否则，检查下一个
+
+        # 检查是全不通还是有进程没结束
+        all_done = all(p.poll() is not None for p in ps.values())
+        if all_done:  # 全不通
+            return None
+
+
+def kill_all(ps: dict[str, subprocess.Popen]):
     # kill 其他仍在运行的进程
     for p in ps.values():
         if p.poll() is not None:
@@ -41,5 +52,3 @@ def ping_each_ip(addresses: list[str]) -> str | None:
             p.kill()
         except ProcessLookupError:
             pass  # 进程可能已经结束
-
-    return found
