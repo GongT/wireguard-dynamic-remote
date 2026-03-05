@@ -95,7 +95,7 @@ def check_interface(interface: str, config: RunContext):
                 something_errored = True
                 continue
 
-            logger.output(f"Resolved endpoint to {', '.join(correct_address)}")
+            logger.output(f"Resolved endpoint to {len(correct_address)} addresses: {', '.join(correct_address)}")
 
             if current_endpoint.addr in correct_address:
                 logger.output(f"Current endpoint is correct, no action needed.")
@@ -106,6 +106,10 @@ def check_interface(interface: str, config: RunContext):
                     "Multiple addresses resolved, pinging to find the best one..."
                 )
                 working_address = ping_each_ip(correct_address)
+                if not working_address:
+                    logger.error(f"No peer responded to ping!")
+                    something_errored = True
+                    continue
                 logger.output(f"  * {working_address}")
             else:
                 working_address = correct_address[0]

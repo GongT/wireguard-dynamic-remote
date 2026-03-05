@@ -101,7 +101,7 @@ def install_service(config: RunContext):
         ["systemctl", "enable", f"{SYSTEMD_SERVICE_NAME}.timer"],
     )
 
-    systemctl.start(f"{SYSTEMD_SERVICE_NAME}.timer", True)
+    systemctl.start(f"{SYSTEMD_SERVICE_NAME}.timer", restart=True)
     systemctl.print_status(
         f"{SYSTEMD_SERVICE_NAME}.service", f"{SYSTEMD_SERVICE_NAME}.timer"
     )
@@ -110,8 +110,9 @@ def install_service(config: RunContext):
 def uninstall_service():
     service_file, timer_file = _services()
 
-    systemctl.reset_failed(service_file.name)
-    systemctl.disable(timer_file.name)
+    systemctl.disable(timer_file.name, now=True)
+    systemctl.stop(service_file.name)
+    systemctl.reset_failed(timer_file.name, service_file.name)
 
     changed = False
     if service_file.exists():

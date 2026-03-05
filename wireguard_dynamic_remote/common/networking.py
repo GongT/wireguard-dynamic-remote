@@ -1,5 +1,6 @@
 import platform
 import subprocess
+import time
 
 
 def ping_each_ip(addresses: list[str]) -> str | None:
@@ -37,6 +38,7 @@ def wait_for_processes(ps: dict[str, subprocess.Popen]):
 
             # 如果成功 ping 通，则返回地址
             if return_code == 0:
+                print(f"Address {address} responded successfully.")
                 return address
 
             # 否则，检查下一个
@@ -44,8 +46,10 @@ def wait_for_processes(ps: dict[str, subprocess.Popen]):
         # 检查是全不通还是有进程没结束
         all_done = all(p.poll() is not None for p in ps.values())
         if all_done:  # 全不通
+            print("All addresses failed to respond.")
             return None
 
+        time.sleep(0.5)  # 等待一段时间后再次检查
 
 def kill_all(ps: dict[str, subprocess.Popen]):
     # kill 其他仍在运行的进程

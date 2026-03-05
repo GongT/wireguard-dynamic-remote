@@ -9,7 +9,7 @@ def start_service_inner(interface: str, nonce: str):
     if sys.platform == "win32":
         win32_service_start(interface, nonce)
     else:
-        systemctl.start(f"wg-quick@{interface}.service", nonce == "restart")
+        systemctl.start(f"wg-quick@{interface}.service", restart=nonce == "restart")
 
 
 def cross_platform_start_service(interface: str, nonce="start"):
@@ -23,13 +23,17 @@ def cross_platform_start_service(interface: str, nonce="start"):
 
 def win32_service_start(interface: str, nonce: str):
     if nonce == "restart":
-        nonce = 'Restart'
+        nonce = "Restart"
     elif nonce == "start":
-        nonce = 'Start'
+        nonce = "Start"
     else:
         logger.explode("Invalid nonce")
-        
+
     execute_drop(
-        ["powershell.exe", "-Command", f"{nonce}-Service 'WireGuardTunnel$vpn{interface}'"],
+        [
+            "powershell.exe",
+            "-Command",
+            f"{nonce}-Service 'WireGuardTunnel$vpn{interface}'",
+        ],
         error="print",
     )
