@@ -10,6 +10,9 @@ def output(message: str):
 
 def error(message: str):
     print(f"\x1b[38;5;9m{_indent}{message}\x1b[0m", file=sys.stderr, flush=True)
+    
+def warning(message: str):
+    print(f"\x1b[38;5;11m{_indent}{message}\x1b[0m", file=sys.stderr, flush=True)
 
 
 def indent(chars="    "):

@@ -30,15 +30,14 @@ def execute_capture(commandline: list[str], error: ErrorBehavior = "fatal") -> s
 
     如果失败:
         如果error为"fatal", 则输出错误并退出程序
-        如果error为"print", 则输出错误并继续（返回空字符串）
-        如果error为"ignore", 则继续（返回空字符串）
-        如果error为"raise", 则抛异常
+        如果error为"print", 则输出错误并继续（可能返回空字符串）
+        如果error为"ignore", 则继续（可能返回空字符串）
+        如果error为"raise", 则抛出异常
 
     """
     output = _execute(commandline, capture=True, error=error)
     assert output is not None
     return output
-
 
 def _execute(commandline: list[str], capture=False, error: ErrorBehavior = "fatal"):
     try:
@@ -60,9 +59,6 @@ def _execute(commandline: list[str], capture=False, error: ErrorBehavior = "fata
         logger.check(p, ignore=True)
 
     if capture:
-        if p.returncode == 0:
-            return p.stdout.strip()
-        else:
-            return ""
+        return p.stdout.strip()
 
     return None

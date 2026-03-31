@@ -1,5 +1,6 @@
 import ipaddress
 import shutil
+import subprocess
 import sys
 
 from ..common import logger
@@ -46,7 +47,9 @@ class Resolver:
             cmd.append(f"@{resolver}")
         cmd.extend([host, "A", host, "AAAA"])
 
-        p = execute_capture(cmd)
+        p = execute_capture(cmd, error="ignore")
+        if not p:
+            raise Exception(f"dig did not return any output for host '{host}'")
         s = set()
 
         for line in p.splitlines():

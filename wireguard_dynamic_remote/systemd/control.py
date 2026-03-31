@@ -34,7 +34,7 @@ Requires={SYSTEMD_SERVICE_NAME}.timer
 Type=oneshot
 User=root
 ExecStart={sys.executable} -m wireguard_dynamic_remote.binary start {service_args}
-Restart=no
+Restart=on-failure
 RemainAfterExit=no
 NotifyAccess=all
 ProtectSystem=strict
@@ -54,6 +54,7 @@ WantedBy=timers.target
 [Timer]
 OnBootSec=5min
 OnUnitActiveSec={str(config.interval)}s
+OnUnitInactiveSec={str(config.interval)}s
 """
 
 

@@ -3,7 +3,7 @@ import sys
 from ..common import logger
 from ..common.context import RunContext
 from ..common.networking import ping_each_ip
-from ..wireguard import get_runtime_interface, get_static_interface, set_peer_address
+from ..wireguard import get_runtime_interface, get_static_interface, set_peer_address, Endpoint
 from .resolve import resolve
 from .service_control import cross_platform_start_service
 
@@ -81,29 +81,31 @@ def check_interface(interface: str, config: RunContext):
             current_endpoint = peer.endpoint()
 
             if not current_endpoint:
-                logger.error(f"Endpoint is never connected, ignoring.")
-                something_errored = True
-                continue
+                logger.warning(f"Endpoint is never connected.")
+                current_endpoint = Endpoint("0.0.0.0:0")
 
             if current_endpoint.is_hostname:
                 logger.explode(f"peer.endpoint_host is a string!")
-
+            
+            logger.output(f"Resolving hostname '{correct_endpoint.addr}' with resolver '{config.resolver}'")
             correct_address = resolve(correct_endpoint.addr, config.resolver)
 
             if correct_address is None or len(correct_address) == 0:
-                logger.error(f"Failed to resolve domain '{correct_endpoint.addr}'!")
+                logger.error(f"  → Failed to resolve!")
                 something_errored = True
                 continue
 
-            logger.output(f"Resolved endpoint to {len(correct_address)} addresses: {', '.join(correct_address)}")
+            logger.output(
+                f"  → {len(correct_address)} addresses: {', '.join(correct_address)}"
+            )
 
-            if current_endpoint.addr in correct_address:
+            if current_endpoint.addr in correct_address and correct_endpoint.port == current_endpoint.port:
                 logger.output(f"Current endpoint is correct, no action needed.")
                 continue
 
             if len(correct_address) > 1:
                 logger.output(
-                    "Multiple addresses resolved, pinging to find the best one..."
+                    "Multiple addresses founded, pinging to find the best one..."
                 )
                 working_address = ping_each_ip(correct_address)
                 if not working_address:
@@ -117,7 +119,7 @@ def check_interface(interface: str, config: RunContext):
             assert working_address is not None
 
             if update_by_set:
-                new_endpoint = f"{working_address}:{current_endpoint.port}"
+                new_endpoint = f"{working_address}:{correct_endpoint.port}"
                 logger.output(f"Updating endpoint to {new_endpoint}")
                 set_peer_address(interface, peer.PublicKey, new_endpoint)
             something_changed = True

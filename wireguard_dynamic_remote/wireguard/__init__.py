@@ -1,13 +1,12 @@
 import os
-import shutil
 import subprocess
 import sys
-from logging import error
 from pathlib import Path
 
 from ..common import logger
 from ..common.spawn import execute_capture, execute_drop
 from .config_parser import parse_config_content
+from .type import Endpoint, GlobalConfig, PeerConfig
 
 
 def get_runtime_interface(interface: str):
